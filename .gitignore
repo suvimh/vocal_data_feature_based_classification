@@ -1,0 +1,11 @@
+# Ignore log files
+*.log
+
+# Ignore csv data file 
+voice_data_thesis.csv
+
+# Ignore OS-specific files
+.DS_Store
+
+# Ignore pychache 
+__pycache__/
