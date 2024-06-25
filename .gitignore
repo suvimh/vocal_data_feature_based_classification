@@ -3,6 +3,7 @@
 
 # Ignore csv data file 
 voice_data_thesis.csv
+voice_data_thesis_preprocessed.csv
 
 # Ignore OS-specific files
 .DS_Store
