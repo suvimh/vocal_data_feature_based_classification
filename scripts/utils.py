@@ -1,4 +1,5 @@
 import pandas as pd
+from sklearn.preprocessing import StandardScaler
 from sklearn.feature_selection import SelectKBest, f_classif
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -61,6 +62,31 @@ def prepare_data(csv_file, audio_source, classify, modalities=None, num_features
         print("Selected features: ", selected_features)
 
     return x, y
+
+
+def standardize_x_data(X_train, X_test):
+    '''
+    Standardizes the features in the train and test datasets separately.
+
+    Args:
+        X_train (DataFrame): Training feature set.
+        X_test (DataFrame): Testing feature set.
+
+    Returns:
+        X_train_std (DataFrame): Standardized training feature set.
+        X_test_std (DataFrame): Standardized testing feature set.
+        y_train (Series): Training labels.
+        y_test (Series): Testing labels.
+    '''
+    scaler = StandardScaler()
+    
+    X_train_std = scaler.fit_transform(X_train)
+    X_train_std = pd.DataFrame(X_train_std, columns=X_train.columns)
+
+    X_test_std = scaler.transform(X_test)
+    X_test_std = pd.DataFrame(X_test_std, columns=X_test.columns)
+    
+    return X_train_std, X_test_std
 
 
 def feature_selection(num_features, X, y):
