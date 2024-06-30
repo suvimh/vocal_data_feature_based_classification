@@ -57,7 +57,7 @@ def clean_metadata_for_individual_model(data):
         Returns:
             clean_data (pd.DataFrame): dataframe with selected metadata columns removed
     '''
-    clean_data = data.drop(columns=['participant', 'age', 'sex' ,'experience level'])
+    clean_data = data.drop(columns=['participant_number', 'sex', 'age', 'experience_level'])
     return clean_data
 
 
@@ -79,13 +79,13 @@ def select_model_audio_source(data, selected_source):
     for audio_source in audio_sources:
         if audio_source != selected_source.lower():
             columns_to_drop.extend([
-                f'{audio_source} pitch', f'{audio_source} note', f'{audio_source} rms energy', f'{audio_source} spec centroid', 
-                f'{audio_source} spec spread', f'{audio_source} spec skewness', f'{audio_source} spec kurtosis', 
-                f'{audio_source} spec slope', f'{audio_source} spec decrease', f'{audio_source} spec rolloff',
-                f'{audio_source} spec flatness', f'{audio_source} spec crest'
+                f'{audio_source}_pitch', f'{audio_source}_note', f'{audio_source}_rms_energy', f'{audio_source}_spec_cent', 
+                f'{audio_source}_spec_spread', f'{audio_source}_spec_skew', f'{audio_source}_spec_kurt', 
+                f'{audio_source}_spec_slope', f'{audio_source}_spec_decr', f'{audio_source}_spec_rolloff',
+                f'{audio_source}_spec_flat', f'{audio_source}_spec_crest'
             ])
-            columns_to_drop.extend([f'{audio_source} tristimulus{i}' for i in range(1, 4)])
-            columns_to_drop.extend([f'{audio_source} mfcc fb40 {i}' for i in range(1, 14)])
+            columns_to_drop.extend([f'{audio_source}_tristimulus{i}' for i in range(1, 4)])
+            columns_to_drop.extend([f'{audio_source}_mfcc_{i}' for i in range(1, 14)])
 
     data = data.drop(columns=columns_to_drop)
 
@@ -111,12 +111,12 @@ def select_model_video_source(data, selected_source):
 
     for video_source in video_sources:
         if video_source != selected_source.lower():
-            columns_to_drop.extend([f'{video_source} pose_landmark_{i}_x' for i in range(1, 34)])
-            columns_to_drop.extend([f'{video_source} pose_landmark_{i}_y' for i in range(1, 34)])
-            columns_to_drop.extend([f'{video_source} pose_landmark_{i}_z' for i in range(1, 34)])
-            columns_to_drop.extend([f'{video_source} face_landmark_{i}_x' for i in range(1, 69)])
-            columns_to_drop.extend([f'{video_source} face_landmark_{i}_y' for i in range(1, 69)])
-            columns_to_drop.extend([f'{video_source} face_landmark_{i}_z' for i in range(1, 69)])
+            columns_to_drop.extend([f'{video_source}_pose_landmark_{i}_x' for i in range(1, 34)])
+            columns_to_drop.extend([f'{video_source}_pose_landmark_{i}_y' for i in range(1, 34)])
+            columns_to_drop.extend([f'{video_source}_pose_landmark_{i}_z' for i in range(1, 34)])
+            columns_to_drop.extend([f'{video_source}_face_landmark_{i}_x' for i in range(1, 69)])
+            columns_to_drop.extend([f'{video_source}_face_landmark_{i}_y' for i in range(1, 69)])
+            columns_to_drop.extend([f'{video_source}_face_landmark_{i}_z' for i in range(1, 69)])
             break
 
     data = data.drop(columns=columns_to_drop)
@@ -136,8 +136,8 @@ def select_model_biodata(data, selected_sources):
             data (pd.DataFrame): dataframe with selected bio columns for the source
     '''
     bio_sources = [
-        'pzt',
-        'emg',
+        'respiration_1',
+        'emg_1',
         'eeg_1', 
         'eeg_2'
     ]
@@ -185,14 +185,14 @@ def clean_unidentified_pitches(data, source):
     combined_condition = pd.Series([True] * len(data))
 
     if source: # only look for the one source thats already filtered
-        pitch_col = f'{source} pitch'
-        note_col = f'{source} note'
+        pitch_col = f'{source}_pitch'
+        note_col = f'{source}_note'
         condition = (data[pitch_col] != 0.000) | (data[note_col] != 'Rest')
         combined_condition &= condition
     else: # remove for all sources if they havent been filtered
         for source in ['mic', 'phone', 'computer']:
-            pitch_col = f'{source} pitch'
-            note_col = f'{source} note'
+            pitch_col = f'{source}_pitch'
+            note_col = f'{source}_note'
             condition = (data[pitch_col] != 0.000) | (data[note_col] != 'Rest')
             combined_condition &= condition
 

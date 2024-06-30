@@ -3,7 +3,7 @@ from sklearn.model_selection import StratifiedKFold, cross_val_score
 from sklearn.preprocessing import StandardScaler
 from sklearn.neural_network import MLPClassifier
 from sklearn.pipeline import Pipeline
-from sklearn.metrics import f1_score, confusion_matrix
+from sklearn.metrics import f1_score, confusion_matrix, classification_report
 
 
 def train_mlp(x_train, y_train, hidden_layers=(12,), random_state=42):
@@ -45,7 +45,7 @@ def train_mlp(x_train, y_train, hidden_layers=(12,), random_state=42):
     return pipeline
 
 
-def evaluate_mlp(pipeline, x_test, y_test):
+def evaluate_mlp(pipeline, x_test, y_test, class_names):
     '''
         Evaluate the performance of the MLP classifier on the test set.
 
@@ -62,4 +62,6 @@ def evaluate_mlp(pipeline, x_test, y_test):
     f1 = f1_score(y_test, y_pred, average='weighted')
     conf_matrix = confusion_matrix(y_test, y_pred)
 
-    return f1, conf_matrix
+    class_report = classification_report(y_test, y_pred, target_names=class_names)
+
+    return f1, class_report, conf_matrix
