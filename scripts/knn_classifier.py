@@ -20,7 +20,7 @@ def train_and_test_knn(csv_file, classify, audio_source, num_features=None, moda
         y_test (array): The true labels for the test set.
         y_pred (array): The predicted labels for the test set.
     '''
-    x, y = prepare_data(csv_file, audio_source, classify, modalities, num_features)
+    x, y = prepare_data(csv_file, audio_source, classify, algorithm='knn', modalities=modalities, num_features=num_features)
 
     class_names = y.unique()
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=test_size, random_state=42, stratify=y)
